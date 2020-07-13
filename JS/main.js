@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 fetchCategory = () => {
-DBHelper.fetchCategory((error, category) => {
+DataBase.fetchCategory((error, category) => {
   if (error) {
     console.error(error);
   } else {
@@ -37,7 +37,7 @@ fillCategoryHTML = (category = self.category) => {
 }
 
 fetchZones = () => {
-DBHelper.fetchZones((error, zone) => {
+DataBase.fetchZones((error, zone) => {
   if (error) { 
     console.error(error);
   } else {
@@ -69,7 +69,7 @@ const cIndex = cSelect.selectedIndex;
 const zone = zSelect[zIndex].value;
 const category = cSelect[cIndex].value;
 
-DBHelper.fetchBlogByZoneAndCategory(zone, category, (error, blogs) => {
+DataBase.fetchBlogByZoneAndCategory(zone, category, (error, blogs) => {
   if (error) { 
     console.error(error);
   } else {
@@ -80,7 +80,7 @@ DBHelper.fetchBlogByZoneAndCategory(zone, category, (error, blogs) => {
 }
 
 resetBlogs = (blogs) => {
-// Remove all restaurants
+
   self.blogs = [];
   const ul = document.getElementById('blogs-list');
   ul.innerHTML = '';
@@ -108,7 +108,7 @@ createBlogHTML = (blog) => {
 
         const image = document.createElement('img');
         image.className = 'card-img-top';
-        image.src = DBHelper.imageUrlForBlog(blog);
+        image.src = DataBase.imageUrlForBlog(blog);
         card.append(image);
 
         const cardbody = document.createElement('div');  
@@ -125,7 +125,7 @@ createBlogHTML = (blog) => {
 
           const more = document.createElement('a');
           more.innerHTML = 'Read more....';
-          more.href = DBHelper.urlForBlog(blog);
+          more.href = DataBase.urlForBlog(blog);
           cardbody.append(more);
 
         card.appendChild(cardbody);
