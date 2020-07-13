@@ -2,29 +2,23 @@
 
 let blog;
 
-/**
- * Initialize map as soon as the page is loaded.
- */
+
 document.addEventListener('DOMContentLoaded', (event) => {  
   fetchBlogFromURL();
-  // fetchCategory();
-  // fetchZones();
-  // updateBlogs();
-  
 });
 
  
  fetchBlogFromURL = (callback) => {
-  if (self.blog) { // restaurant already fetched!
+  if (self.blog) { 
     callback(null, self.blog)
     return;
   }
   const id = getParameterByName('id');
-  if (!id) { // no id found in URL
+  if (!id) { 
     error = 'No restaurant id in URL'
-   // callback(error, null);
+  
   } else {
-    DBHelper.fetchBlogById(id, (error, blog) => {
+    DataBase.fetchBlogById(id, (error, blog) => {
       self.blog = blog;
       if (!blog) {
         console.error(error);
@@ -40,7 +34,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 }
 
 /**
- * Create restaurant HTML and add it to the webpage
+ * Create blogs
  */
 fillBlogHTML = (blog = self.blog) => {
   const title = document.getElementById('blog-title');
@@ -52,7 +46,7 @@ fillBlogHTML = (blog = self.blog) => {
 
   const image = document.getElementById('blog-img');
   image.className = 'blog-img'
-  image.src = DBHelper.imageUrlForBlogMain(blog);
+  image.src = DataBase.imageUrlForBlogMain(blog);
 
   const category = document.getElementById('blog-category');
   category.innerHTML = blog.category;
@@ -66,7 +60,7 @@ fillBlogHTML = (blog = self.blog) => {
   FoodTitle.innerHTML = blog.foodtitle;
 
   const imageF = document.getElementById('blogF-img');
-  imageF.src = DBHelper.imageUrlForBlogFood(blog);
+  imageF.src = DataBase.imageUrlForBlogFood(blog);
 
   const FoodContent = document.getElementById('FoodContent');
   FoodContent.innerHTML = blog.foodContent;
@@ -77,7 +71,7 @@ fillBlogHTML = (blog = self.blog) => {
   const map = document.getElementById('map');
   const Gmap = document.createElement('iframe');
   Gmap.className = "Gmap";
-  Gmap.src = DBHelper.locationURL(blog.location);
+  Gmap.src = DataBase.locationURL(blog.location);
   Gmap.width = "350";
   Gmap.height = "450";
   Gmap.frameBorder = "0";
@@ -113,9 +107,7 @@ fillCommentsHTML = (comments = self.blog.comments) => {
   container.appendChild(ul);
 }
 
-/**
- * Create review HTML and add it to the webpage.
- */
+//Create comments
 createCommentsHTML = (comment) => {
 
   const li = document.createElement('li');
@@ -129,7 +121,7 @@ createCommentsHTML = (comment) => {
 
   const image = document.createElement('img');
   image.className = "mr-3 rounded-circle";
-  image.src = DBHelper.imageUrlForUser(comment.photo);
+  image.src = DataBase.imageUrlForUser(comment.photo);
   image.width="100";
   image.height="100";
 
@@ -170,63 +162,9 @@ createCommentsHTML = (comment) => {
 
  
 //sidebar menu function
-  // fetchCategory = () => {
-  // DBHelper.fetchCategory((error, category) => {
-  //   if (error) { // Got an error
-  //     console.error(error);
-  //   } else {
-  //     self.category = category;
-  //     fillCategoryHTML();
-  //   }
-  //   });
-  // }
-  
-  // fillCategoryHTML = (category = self.category) => {
-  //   const select = document.getElementById('category-select');
-  
-  //   category.forEach(cat => {
-  //   const option = document.createElement('option');
-  //   option.innerHTML = cat;
-  //   option.value = cat;
-  //   select.append(option);
-  //   });
-  // }
-  
-  // fetchZones = () => {
-  // DBHelper.fetchZones((error, zone) => {
-  //   if (error) { // Got an error!
-  //     console.error(error);
-  //   } else {
-  //     self.zone = zone;
-  //     fillZonesHTML();
-  //   }
-  //   });
-  // }
-  
-  // fillZonesHTML = (zone = self.zone) => {
-  //   const select = document.getElementById('zones-select');
-  
-  //   zone.forEach(zone => {
-  //   const option = document.createElement('option');
-  //   option.innerHTML = zone;
-  //   option.value = zone;
-  //   select.append(option);
-  //   });
-  // }
-  
+ 
   
   updateBlogs = (blog) => {
-  // const zSelect = document.getElementById('zones-select');
-  // const cSelect = document.getElementById('category-select');
-  
-  // const zIndex = zSelect.selectedIndex;
-  // const cIndex = cSelect.selectedIndex;
-  
-  // const zone = zSelect[zIndex].value;
-  // const category = cSelect[cIndex].value;
-
-  // const cate = blog.category ;
-
 
   
   const category = blog.category;
@@ -234,7 +172,7 @@ createCommentsHTML = (comment) => {
 
   const SameID = blog.id;
   
-  DBHelper.fetchBlogByZoneAndCategory(zone, category, (error, blogs) => {
+  DataBase.fetchBlogByZoneAndCategory(zone, category, (error, blogs) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -244,16 +182,8 @@ createCommentsHTML = (comment) => {
     }
   })
   }
-  
-  // resetBlogs = (blogs) => {
-  // // Remove all restaurants
-  //   self.blogs = [];
-  //   const ul = document.getElementById('blogs-list');
-  //   ul.innerHTML = '';
-  //   self.blogs = blogs;
-  // }
-  
-  fillBlogsHTML = (blogs, SameID) => {
+
+    fillBlogsHTML = (blogs, SameID) => {
     const ul = document.getElementById('blogs-list');
     
       
@@ -270,7 +200,7 @@ createCommentsHTML = (comment) => {
   
     const image = document.createElement('img');
     image.className = 'blog-img';
-    image.src = DBHelper.imageUrlForBlog(blog);
+    image.src = DataBase.imageUrlForBlog(blog);
     div.append(image);
   
     const title = document.createElement('h2');
@@ -297,7 +227,7 @@ createCommentsHTML = (comment) => {
   
     const more = document.createElement('a');
     more.innerHTML = 'Read...';
-    more.href = DBHelper.urlForBlog(blog);
+    more.href = DataBase.urlForBlog(blog);
     div.append(more)
 
     const hr=document.createElement('hr')
@@ -305,10 +235,7 @@ createCommentsHTML = (comment) => {
   
     return div
   }
-// }
-/**
- * Add restaurant name to the breadcrumb navigation menu
- */
+
 fillBreadcrumb = (blog=self.blog) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
@@ -316,9 +243,7 @@ fillBreadcrumb = (blog=self.blog) => {
   breadcrumb.appendChild(li);
 }
 
-/**
- * Get a parameter by name from page URL.
- */
+
 getParameterByName = (name, url) => {
     if (!url)
       url = window.location.href;
